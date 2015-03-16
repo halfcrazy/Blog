@@ -74,14 +74,8 @@
     <link href="http://halfcrazy.me/2015/03/11/URI%E4%B8%AD%E7%9A%84%E5%A4%A7%E5%B0%8F%E5%86%99/"/>
     <id>http://halfcrazy.me/2015/03/11/URI中的大小写/</id>
     <published>2015-03-11T09:30:05.000Z</published>
-    <updated>2015-03-16T08:09:52.000Z</updated>
-    <content type="html"><![CDATA[<p>title: URI中的大小写<br>date: 2015-03-11 17:30:05<br>tags: </p>
-<ul>
-<li>网络</li>
-<li>web<br>categories: 杂谈</li>
-</ul>
-<hr>
-<p>统一资源定位符的标准格式如下：</p>
+    <updated>2015-03-16T09:03:21.000Z</updated>
+    <content type="html"><![CDATA[<p>统一资源定位符的标准格式如下：</p>
 <blockquote>
 <p>协议类型://服务器地址（必要时需加上端口号）/路径/文件名</p>
 </blockquote>
@@ -90,13 +84,11 @@
 <p>再然后是文件名，文件名取决于操作系统和服务器设置，如果是直接映射到系统文件目录的话，那么要看操作系统。</p>
 ]]></content>
     <summary type="html">
-    <![CDATA[<p>title: URI中的大小写<br>date: 2015-03-11 17:30:05<br>tags: </p>
-<ul>
-<li>网络</li>
-<li>web<br>categories: 杂谈</li>
-</ul>
-<hr>
-<p>统一资源定位符的标准格式如下：<]]>
+    <![CDATA[<p>统一资源定位符的标准格式如下：</p>
+<blockquote>
+<p>协议类型://服务器地址（必要时需加上端口号）/路径/文件名</p>
+</blockquote>
+<p>其中协议名，和服务器地址不大小写敏感的。也就是说<br><a href="http://www.d]]>
     </summary>
     
       <category term="web" scheme="http://halfcrazy.me/tags/web/"/>
