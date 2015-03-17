@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8">
   
-  <title>halfcrazy在疯言疯语</title>
+  <title>python中的staticmethod与classmethod | halfcrazy在疯言疯语</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="我的个人博客，python，vim，linux">
-<meta property="og:type" content="website">
-<meta property="og:title" content="halfcrazy在疯言疯语">
-<meta property="og:url" content="http://halfcrazy.me/tags/CSRF/index.html">
+  <meta name="description" content="先上例子12345678910111213141516171819202122232425262728class A(object):    num1 = 123    def __init__(self):        self.num2 = 456    @classmethod    def a(cls):        print &apos;a&apos;        #cls.a() 这里调用a会陷入">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python中的staticmethod与classmethod">
+<meta property="og:url" content="http://halfcrazy.me/2015/03/17/python中的staticmethod与classmethod/index.html">
 <meta property="og:site_name" content="halfcrazy在疯言疯语">
-<meta property="og:description" content="我的个人博客，python，vim，linux">
+<meta property="og:description" content="先上例子12345678910111213141516171819202122232425262728class A(object):    num1 = 123    def __init__(self):        self.num2 = 456    @classmethod    def a(cls):        print &apos;a&apos;        #cls.a() 这里调用a会陷入">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="halfcrazy在疯言疯语">
-<meta name="twitter:description" content="我的个人博客，python，vim，linux">
+<meta name="twitter:title" content="python中的staticmethod与classmethod">
+<meta name="twitter:description" content="先上例子12345678910111213141516171819202122232425262728class A(object):    num1 = 123    def __init__(self):        self.num2 = 456    @classmethod    def a(cls):        print &apos;a&apos;        #cls.a() 这里调用a会陷入">
   
     <link rel="alternative" href="/atom.xml" title="halfcrazy在疯言疯语" type="application/atom+xml">
   
@@ -75,16 +75,14 @@ ga('send', 'pageview');
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-理解CSRF" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-python中的staticmethod与classmethod" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
-    <a href="/2015/02/03/理解CSRF/" class="article-date">
-  <time datetime="2015-02-03T07:17:39.000Z" itemprop="datePublished">Feb 3 2015</time>
+    <a href="/2015/03/17/python中的staticmethod与classmethod/" class="article-date">
+  <time datetime="2015-03-17T08:06:31.000Z" itemprop="datePublished">Mar 17 2015</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/译文/">译文</a>
+    <a class="article-category-link" href="/categories/tricks/">tricks</a>
   </div>
 
   </div>
@@ -94,8 +92,8 @@ ga('send', 'pageview');
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2015/02/03/理解CSRF/">理解CSRF(跨站请求伪造)</a>
+    <h1 class="article-title" itemprop="name">
+      python中的staticmethod与classmethod
     </h1>
   
 
@@ -103,68 +101,50 @@ ga('send', 'pageview');
     
     <div class="article-entry" itemprop="articleBody">
       
-        <blockquote>
-<p>原文出处<a href="https://github.com/pillarjs/understanding-csrf" target="_blank" rel="external">Understanding CSRF</a></p>
-</blockquote>
-<p>对于Express团队的<a href="https://github.com/pillarjs/csurf" target="_blank" rel="external">csrf</a>模块有一些关注，尤其是围绕着如何安全的生成token。<br>这些关注是莫须有的，因为他们不了解CSRF token是如何工作的。<br>下面快速过一遍！</p>
-<p>读过后还有疑问？希望告诉我们错误？请开一个issue！</p>
-<h2 id="一个CSRF攻击是如何工作的？">一个CSRF攻击是如何工作的？</h2><p>在他们的钓鱼站点，攻击者可以针对你的网站创建一个请求通过创建一个AJAX按钮或者表单：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">form</span> <span class="attribute">action</span>=<span class="value">"https://my.site.com/me/something-destructive"</span> <span class="attribute">method</span>=<span class="value">"POST"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">button</span> <span class="attribute">type</span>=<span class="value">"submit"</span>&gt;</span>Click here for free money!<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>这是很危险的，因为攻击者可以使用其他http方法例如 <code>delete</code> 来获取结果。<br>这在用户的session中有很多关于你的网站的详细信息时是相当危险的。如果一个不懂技术的用户遇到了，他们就有可能会输入信用卡号或者个人安全信息。</p>
-<h2 id="如果减轻CSRF攻击？">如果减轻CSRF攻击？</h2><h3 id="禁用CORS">禁用CORS</h3><p>第一种减轻CSRF攻击的方法是禁用cross-origin requests(跨域请求)。<br>不要允许跨域请求!<br>如果你希望允许跨域请求，那么请只允许 <code>OPTIONS, HEAD, GET</code> 方法，并且不要支持sessions或者cookies!<br>他们是攻击者的主要目标。</p>
-<p>一种推荐的做法是总是删除来自跨域请求的cookies在你处理来自这些请求的任何业务逻辑之前。<br>另外一种是检验header中的带的 <code>referrer</code> 。</p>
-<h3 id="不要兼容旧浏览器">不要兼容旧浏览器</h3><p>但是请记住，CSRF在CORS实现之前就有。<br>并且对于不支持CORS的浏览器来说，这是一个大问题。<br>就我所知道的，这意味着IE10以前的所有浏览器。</p>
-<p>因此，你可以不支持那些旧的浏览器！<br>这意味着查看那些特别的 <code>user-agent</code> 。<br>如果你只是不允许那些使用旧浏览器的用户登录或者存储任何个人信息，那也是可以的！</p>
-<h3 id="CSRF_Tokens">CSRF Tokens</h3><p>最终的解决办法是使用CSRF tokens。<br>CSRF tokens是如何工作的呢？</p>
-<ol>
-<li>服务器发送给客户端一个token。</li>
-<li>客户端提交的表单中带着这个token。</li>
-<li>如果这个token不合法，那么服务器拒绝这个请求。</li>
-</ol>
-<p>因此，攻击者需要通过谋者办法获得一个合法的token来构造一个AJAX请求。<br>如果你允许了CORS，那么如果攻击者做起来就很简单，如果你暴露了token给客户端通过某种方式(显然你会把token发给客户端)。</p>
-<p><strong>禁用 CORS!!!</strong><br>但是对于旧的浏览器，这相当简单，只要攻击者知道可以从哪里获取一个CSRF token。</p>
-<p>这个token需要是不可猜测的，是它不会被攻击者尝试几次就猜出来。</p>
-<p>最后一件事是不要创建一个类似 <code>/csrf</code> 之类的路由来获取token，那么攻击者就不会很容易获取一个CSRF token。</p>
-<h2 id="BREACH攻击">BREACH攻击</h2><p>这也就是salt(加盐)出现的原因。<br>Breach攻击相当简单：如果服务器通过HTTPS+gzip多次发送相同或者相似的响应，攻击者就可以猜测响应的内容。解决办法？让每一个响应都有那么一点不同。<br>于是，CSRF tokens依据每一个不同的请求还有不同的时间来生成。<br>但是服务器需要知道客户端请求中带的token是否是合法的。<br>因此：</p>
-<ol>
-<li>一般认为安全加密的CSRF tokens是防护CSRF的关键</li>
-<li>CSRF tokens现在通常是一个秘钥或者salt的hash</li>
-</ol>
-<p>了解更多:</p>
+        <p>先上例子<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span><span class="params">(object)</span>:</span></span><br><span class="line">    num1 = <span class="number">123</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.num2 = <span class="number">456</span></span><br><span class="line">    <span class="decorator">@classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">a</span><span class="params">(cls)</span>:</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">'a'</span></span><br><span class="line">        <span class="comment">#cls.a() 这里调用a会陷入无限递归，最终RuntimeError</span></span><br><span class="line">        cls.b()</span><br><span class="line">        <span class="comment">#cls.c() 一般方法需要由实例调用</span></span><br><span class="line">        <span class="keyword">print</span> cls.num1</span><br><span class="line">    <span class="decorator">@staticmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">b</span><span class="params">()</span>:</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">'b'</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">c</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">'c'</span></span><br><span class="line">        <span class="keyword">print</span> self.num1</span><br><span class="line">        <span class="keyword">print</span> self.num2</span><br><span class="line"></span><br><span class="line">A.a()</span><br><span class="line">A.b()</span><br><span class="line"><span class="comment">#A.c() 一般方法需要由实例调用</span></span><br><span class="line"></span><br><span class="line">d = A()</span><br><span class="line"></span><br><span class="line">d.a()</span><br><span class="line">d.b()</span><br><span class="line">d.c()</span><br></pre></td></tr></table></figure></p>
+<p>输出结果:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">a</span><br><span class="line">b</span><br><span class="line">b</span><br><span class="line">a</span><br><span class="line">b</span><br><span class="line">b</span><br><span class="line">c</span><br></pre></td></tr></table></figure></p>
+<p>例子的结果很显然，下面简单总结一下</p>
 <ul>
-<li><a href="http://en.wikipedia.org/wiki/BREACH_(security_exploit)" target="_blank" rel="external">BREACH</a></li>
-<li><a href="http://en.wikipedia.org/wiki/CRIME" target="_blank" rel="external">CRIME</a></li>
-<li><a href="https://community.qualys.com/blogs/securitylabs/2013/08/07/defending-against-the-breach-attack" target="_blank" rel="external">Defending against the BREACH Attack</a></li>
+<li><strong>静态方法</strong>和<strong>类方法</strong>可以直接被类调用</li>
+<li>实例可以调用<strong>静态方法</strong>，<strong>类方法</strong>和<strong>一般方法</strong></li>
+<li><strong>一般方法</strong>调用时会传入对象本身</li>
+<li><strong>类方法</strong>调用时会传入类本身</li>
 </ul>
-<h2 id="salt不需要加密">salt不需要加密</h2><p><strong>因为客户端知道salt!!!</strong><br>服务器会发送 <code>&lt;salt&gt;;&lt;token&gt;</code> ，然后客户端会通过请求返回相同的值给服务器。服务器然后会检验 <code>&lt;secret&gt;+&lt;salt&gt;=&lt;token&gt;</code> 。<br>salt必须跟token一起被发送给服务器，否则服务器不能验证这个token。<br>这是最简单的加密方式。<br>还有很多方法，不过他们更加复杂，犯不着那么麻烦。</p>
-<h2 id="创建tokens必须要快">创建tokens必须要快</h2><p><strong>因为每当进来一个请求他们就会被创建!</strong><br>一些人希望salt通过 <code>crypto.randomBytes()</code> 来创建。<br>这个方法的问题在于，服务器会消耗很多资源，那么，响应速度就会不必要的变慢。<br>因此，一些人建议用 <code>crypto.pseudRandomBytes()</code> ,但是这也同样会导致不必要的变慢。</p>
-<blockquote>
-<p>注意: 在最新版本的io.js中不再有这个问题</p>
-</blockquote>
-<p>因此，类似 <code>Math.random().toString(36).slice(2)</code> 这种简单操作是相当高效的。</p>
-<h2 id="秘钥不需要是加密的，但需要是安全的">秘钥不需要是加密的，但需要是安全的</h2><p>如果你正在使用一个数据库后端来存储session，客户端是不会知道秘钥的，因为它被存储在数据库中。<br>如果你正在使用cookie来存储session，那么秘钥就会被存储在cookie中发送给客户端。<br>因此， <strong>确保cookie sessions 使用 <code>httpOnly</code> 那样客户端就不能通过客户端JavaScript来读取到秘钥!</strong></p>
-<p>即使攻击者可以通过某种手段获取到<code>secret</code>，他也必须要通过CORS请求。</p>
-<h2 id="CSRF攻击只和浏览器有关">CSRF攻击只和浏览器有关</h2><p>如果你正在使用浏览器的开发工具或者其他一般人不会使用到的工具，那你的担心是没有道理的。<br>使用不同的工具有很多种攻击网站的办法，但是CSRF的主要关注点是阻止那些对于不懂技术又使用旧浏览器的使用者的攻击。对于CSRF tokens的一个主要假设是，攻击者不会接触到的受害者的电脑，否则他有比CSRF更好的办法去攻击受害者的电脑。</p>
-<h2 id="CSRF_tokens最终会变得不是那么必要">CSRF tokens最终会变得不是那么必要</h2><p>随着现代浏览器支持CORS以及安全策略，CSRF tokens最终会消失。<br>不用太担心CSRF tokens。<br>对于现在来说，禁止IE9及其以下的浏览器存储你网站的机密信息。<br>但是为了安全起见，你还是应该尽量允许他们尤其是当难以实现的时候。</p>
+<p>也就是说，在<strong>不实例化</strong>的前提下，如果需要在类内部封装暴露给外部调用的方法，并且不需要操作到类内部对象的时候，可以使用<strong>静态方法</strong>或者<strong>类方法</strong>。如果需要操作类内部对象则必须使用<strong>类方法</strong>。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://halfcrazy.me/2015/02/03/理解CSRF/" data-id="ci7d26p8b0001scygbogds8ql" class="article-share-link">Share</a>
+      <a data-url="http://halfcrazy.me/2015/03/17/python中的staticmethod与classmethod/" data-id="ci7d26pab0016scyghceypy4n" class="article-share-link">Share</a>
       
-        <a href="http://halfcrazy.me/2015/02/03/理解CSRF/#disqus_thread" class="article-comment-link">Comments</a>
+        <a href="http://halfcrazy.me/2015/03/17/python中的staticmethod与classmethod/#disqus_thread" class="article-comment-link">Comments</a>
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CSRF/">CSRF</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/安全/">安全</a></li></ul>
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/python/">python</a></li></ul>
 
     </footer>
   </div>
   
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2015/03/16/python中的装饰器/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">python中的装饰器</div>
+    </a>
+  
+</nav>
+
+  
 </article>
 
 
-  
-  
+<section id="comments">
+  <div id="disqus_thread">
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+  </div>
+</section>
 </section>
         
           <aside id="sidebar">
@@ -262,11 +242,13 @@ ga('send', 'pageview');
 <script>
   var disqus_shortname = 'halfcrazy';
   
+  var disqus_url = 'http://halfcrazy.me/2015/03/17/python中的staticmethod与classmethod/';
+  
   (function(){
     var dsq = document.createElement('script');
     dsq.type = 'text/javascript';
     dsq.async = true;
-    dsq.src = '//' + disqus_shortname + '.disqus.com/count.js';
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
     (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
   })();
 </script>

@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://halfcrazy.me/"/>
-  <updated>2015-03-16T09:27:48.000Z</updated>
+  <updated>2015-03-17T08:58:52.000Z</updated>
   <id>http://halfcrazy.me/</id>
   
   <author>
@@ -15,11 +15,38 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
+    <title><![CDATA[python中的staticmethod与classmethod]]></title>
+    <link href="http://halfcrazy.me/2015/03/17/python%E4%B8%AD%E7%9A%84staticmethod%E4%B8%8Eclassmethod/"/>
+    <id>http://halfcrazy.me/2015/03/17/python中的staticmethod与classmethod/</id>
+    <published>2015-03-17T08:06:31.000Z</published>
+    <updated>2015-03-17T08:58:52.000Z</updated>
+    <content type="html"><![CDATA[<p>先上例子<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span><span class="params">(object)</span>:</span></span><br><span class="line">    num1 = <span class="number">123</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        self.num2 = <span class="number">456</span></span><br><span class="line">    <span class="decorator">@classmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">a</span><span class="params">(cls)</span>:</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">'a'</span></span><br><span class="line">        <span class="comment">#cls.a() 这里调用a会陷入无限递归，最终RuntimeError</span></span><br><span class="line">        cls.b()</span><br><span class="line">        <span class="comment">#cls.c() 一般方法需要由实例调用</span></span><br><span class="line">        <span class="keyword">print</span> cls.num1</span><br><span class="line">    <span class="decorator">@staticmethod</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">b</span><span class="params">()</span>:</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">'b'</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">c</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">print</span> <span class="string">'c'</span></span><br><span class="line">        <span class="keyword">print</span> self.num1</span><br><span class="line">        <span class="keyword">print</span> self.num2</span><br><span class="line"></span><br><span class="line">A.a()</span><br><span class="line">A.b()</span><br><span class="line"><span class="comment">#A.c() 一般方法需要由实例调用</span></span><br><span class="line"></span><br><span class="line">d = A()</span><br><span class="line"></span><br><span class="line">d.a()</span><br><span class="line">d.b()</span><br><span class="line">d.c()</span><br></pre></td></tr></table></figure></p>
+<p>输出结果:<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">a</span><br><span class="line">b</span><br><span class="line">b</span><br><span class="line">a</span><br><span class="line">b</span><br><span class="line">b</span><br><span class="line">c</span><br></pre></td></tr></table></figure></p>
+<p>例子的结果很显然，下面简单总结一下</p>
+<ul>
+<li><strong>静态方法</strong>和<strong>类方法</strong>可以直接被类调用</li>
+<li>实例可以调用<strong>静态方法</strong>，<strong>类方法</strong>和<strong>一般方法</strong></li>
+<li><strong>一般方法</strong>调用时会传入对象本身</li>
+<li><strong>类方法</strong>调用时会传入类本身</li>
+</ul>
+<p>也就是说，在<strong>不实例化</strong>的前提下，如果需要在类内部封装暴露给外部调用的方法，并且不需要操作到类内部对象的时候，可以使用<strong>静态方法</strong>或者<strong>类方法</strong>。如果需要操作类内部对象则必须使用<strong>类方法</strong>。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>先上例子<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br]]>
+    </summary>
+    
+      <category term="python" scheme="http://halfcrazy.me/tags/python/"/>
+    
+      <category term="tricks" scheme="http://halfcrazy.me/categories/tricks/"/>
+    
+  </entry>
+  
+  <entry>
     <title><![CDATA[python中的装饰器]]></title>
     <link href="http://halfcrazy.me/2015/03/16/python%E4%B8%AD%E7%9A%84%E8%A3%85%E9%A5%B0%E5%99%A8/"/>
     <id>http://halfcrazy.me/2015/03/16/python中的装饰器/</id>
     <published>2015-03-16T04:43:33.000Z</published>
-    <updated>2015-03-16T09:27:48.000Z</updated>
+    <updated>2015-03-17T08:07:13.000Z</updated>
     <content type="html"><![CDATA[<p>在python中有一种动态修改函数的机制，叫做<strong>装饰器</strong>。<br>先上一个小例子<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="decorator">@log</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plus</span><span class="params">(a, b)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> a + b</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">log</span><span class="params">(fn)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">        <span class="keyword">print</span> args</span><br><span class="line">        fn(*args, **kwargs)</span><br><span class="line">    <span class="keyword">return</span> wrapper</span><br></pre></td></tr></table></figure></p>
 <p>这里定义了一个<code>plus</code>函数，它接收两个参数并返回两个参数相加的结果。又定义了一个函数<code>log</code>，它接收一个函数做参数，并且先输出该函数的参数列表，再执行该函数。这里的<code>log</code>就起到了装饰器的作用。</p>
 <p>下面来解释一下装饰器的行为</p>
@@ -30,7 +57,7 @@
 <p>接下来说一说<strong>带参数的装饰器</strong></p>
 <p>还是以上面的例子为例，如果我们现在不止是希望<code>plus</code>在调用时可以输出参数，并且希望它能加上一个限制条件，只输出符合限制条件的参数。那么我们就可以对装饰器进行修改，调整现在<code>log</code>的行为。</p>
 <p>如果希望加上<code>@log(5)</code>可以使<code>plus</code>只输出大于5的参数，并返回结果，那么可以按照下面的写法来。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> functools</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">log</span><span class="params">(num)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">decorator</span><span class="params">(fn)</span>:</span></span><br><span class="line">        <span class="decorator">@functools.wraps(fn)</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">            <span class="keyword">print</span> [x <span class="keyword">for</span> x <span class="keyword">in</span> args <span class="keyword">if</span> x &gt; num]</span><br><span class="line">            fn(*args, **kwargs)</span><br><span class="line">        <span class="keyword">return</span> wrapper</span><br><span class="line">    <span class="keyword">return</span> decorator</span><br><span class="line">    </span><br><span class="line"><span class="decorator">@log(5)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">plus</span><span class="params">(a, b)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> a + b</span><br></pre></td></tr></table></figure></p>
-<p>在web开发中，尤其是路由部分，大量的使用到了装饰器。例如<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="decorator">@app.route('/', methods=['GET'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">	<span class="keyword">pass</span></span><br></pre></td></tr></table></figure></p>
+<p>在web开发中，尤其是路由部分，大量的使用到了装饰器。例如<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="decorator">@app.route('/', methods=['GET'])</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure></p>
 <p>又比如在权限控制中，如果有这么一组页面，都必须要登陆后才能访问。那么可以自己写一个装饰器<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">auth</span><span class="params">(fn)</span>:</span></span><br><span class="line">    <span class="decorator">@functools.wraps(fn)</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(*args, **kwargs)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> g.user:</span><br><span class="line">            abort(<span class="number">403</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> fn(*args, **kwargs)</span><br><span class="line">    <span class="keyword">return</span> wrapper</span><br><span class="line">            </span><br><span class="line"><span class="decorator">@app.route('/manage', methods=['GET'])</span></span><br><span class="line"><span class="decorator">@auth()</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">manage</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br></pre></td></tr></table></figure></p>
 <p>这样，只需要对需要登陆的controller加上这个<code>auth</code>装饰器，就可以拦截未登录的用户访问。起到一个权限控制的作用。</p>
 ]]></content>
@@ -42,7 +69,7 @@
     
       <category term="python" scheme="http://halfcrazy.me/tags/python/"/>
     
-      <category term="技巧" scheme="http://halfcrazy.me/categories/%E6%8A%80%E5%B7%A7/"/>
+      <category term="tricks" scheme="http://halfcrazy.me/categories/tricks/"/>
     
   </entry>
   
@@ -200,7 +227,7 @@
     <link href="http://halfcrazy.me/2014/12/09/bower-install%E8%B6%85%E6%97%B6/"/>
     <id>http://halfcrazy.me/2014/12/09/bower-install超时/</id>
     <published>2014-12-09T11:39:39.000Z</published>
-    <updated>2014-12-09T11:57:53.000Z</updated>
+    <updated>2015-03-17T09:00:38.000Z</updated>
     <content type="html"><![CDATA[<p>在执行<code>bower install</code>指令时，出现提示<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Additional error details:</span><br><span class="line">fatal: unable to connect to github.com</span><br><span class="line">github.com[<span class="number">0</span>: <span class="number">192.30</span>.<span class="number">252.131</span>]: errno=Connection timed out</span><br></pre></td></tr></table></figure></p>
 <p><a href="https://github.com/angular/angular-phonecat/issues/141" target="_blank" rel="external">网上的说法</a>是由于bower默认采用<em>git://</em>协议，而当<em>git://</em>协议被屏蔽时就会出现这个错误，此时只需将默认<em>git://</em>协议换成<em>https://</em>就行了。在shell中执行如下指令<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git config --global url.<span class="string">"https://"</span>.insteadOf git://</span><br></pre></td></tr></table></figure></p>
 ]]></content>
@@ -212,7 +239,7 @@
     
       <category term="前端" scheme="http://halfcrazy.me/tags/%E5%89%8D%E7%AB%AF/"/>
     
-      <category term="前端" scheme="http://halfcrazy.me/categories/%E5%89%8D%E7%AB%AF/"/>
+      <category term="工具" scheme="http://halfcrazy.me/categories/%E5%B7%A5%E5%85%B7/"/>
     
   </entry>
   
@@ -221,7 +248,7 @@
     <link href="http://halfcrazy.me/2014/11/22/%E4%BD%BF%E7%94%A8gulp/"/>
     <id>http://halfcrazy.me/2014/11/22/使用gulp/</id>
     <published>2014-11-22T11:37:46.000Z</published>
-    <updated>2014-12-09T11:58:10.000Z</updated>
+    <updated>2015-03-17T09:00:22.000Z</updated>
     <content type="html"><![CDATA[<p>在前端开发中经常会遇到一些粗活，比如说压缩、合并、混淆等等。这些粗活大多千篇一律，属于重复劳动，然而却又是无法避免的。为此前端自动化工具因此而生。常用的前端自动化工具有<a href="http://gruntjs.com" target="_blank" rel="external">grunt</a>，<a href="http://gulpjs.com" target="_blank" rel="external">gulp</a>。鉴于<a href="http://gruntjs.com" target="_blank" rel="external">grunt</a>的配置相对<a href="http://gulpjs.com" target="_blank" rel="external">gulp</a>略繁琐，本着能偷懒就偷懒的原则，我选择了使用<a href="http://gulpjs.com" target="_blank" rel="external">gulp</a>。</p>
 <h3 id="什么是gulp">什么是gulp</h3><p><a href="http://gulpjs.com" target="_blank" rel="external">gulp</a>官网上的解释是 The streaming build system.（流构建系统）</p>
 <h3 id="Getting_Started">Getting Started</h3><ol>
@@ -241,7 +268,7 @@
 </li>
 </ol>
 <p>注意，默认执行<code>gulp</code>命令会调用default这个任务，由于我们上面的default任务中没有内容。所以此时gulp不会执行操作。如果想执行指定任务可以使用命令<code>gulp &lt;task&gt; &lt;othertask&gt;</code></p>
-<h3 id="日常的一个小例子">日常的一个小例子</h3><p>我们的开发目录结构如下<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-src</span><br><span class="line"> -scripts</span><br><span class="line">  -a.js</span><br><span class="line">  -b.js</span><br><span class="line"> -styles</span><br><span class="line">  -a.css</span><br><span class="line">  -b.css</span><br></pre></td></tr></table></figure></p>
+<h3 id="日常的一个小例子">日常的一个小例子</h3><p>我们的开发目录结构如下<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">src/</span><br><span class="line">  scripts/</span><br><span class="line">    a.js</span><br><span class="line">    b.js</span><br><span class="line">  styles/</span><br><span class="line">    a.css</span><br><span class="line">    b.css</span><br></pre></td></tr></table></figure></p>
 <p>现有需求如下</p>
 <ol>
 <li>将scripts中的js文件压缩合并为main.js并添加后缀.min后放到发布目录dest/script中</li>
@@ -261,7 +288,7 @@
     
       <category term="自动化" scheme="http://halfcrazy.me/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/"/>
     
-      <category term="前端" scheme="http://halfcrazy.me/categories/%E5%89%8D%E7%AB%AF/"/>
+      <category term="工具" scheme="http://halfcrazy.me/categories/%E5%B7%A5%E5%85%B7/"/>
     
   </entry>
   
