@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://halfcrazy.me/"/>
-  <updated>2015-03-17T12:31:18.000Z</updated>
+  <updated>2015-04-04T14:22:22.000Z</updated>
   <id>http://halfcrazy.me/</id>
   
   <author>
@@ -13,6 +13,47 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[人总是在受挫中慢慢成长]]></title>
+    <link href="http://halfcrazy.me/2015/04/04/%E4%BA%BA%E6%80%BB%E6%98%AF%E5%9C%A8%E5%8F%97%E6%8C%AB%E4%B8%AD%E6%85%A2%E6%85%A2%E6%88%90%E9%95%BF/"/>
+    <id>http://halfcrazy.me/2015/04/04/人总是在受挫中慢慢成长/</id>
+    <published>2015-04-04T14:14:45.000Z</published>
+    <updated>2015-04-04T14:22:22.000Z</updated>
+    <content type="html"><![CDATA[<p>从二月里到现在，这两个月来生活里发生的变化真是天翻地覆，起因是某人彻底的离我而去，而且这次是真是没得回头了。</p>
+<p>谈了5年多的人，被一个追了两周的人抢走，也是十分讽刺。</p>
+<p>我的反应也从最初的暴怒，到现在的平静，虽然花的时间有点久，代价有点大，到底是走出来了。这期间 steam 上的游戏功不可没，虽然是买了不玩，不过买的时候的快感，真的是可以让我不去想那些操蛋的事。当然，跟好友T以及好友Q的谈话也起了很大的作用。</p>
+<p>回头看自己最开始的反应“我不能让她安稳，我怕我再也找不到她这样的”诸如此类的想法是多么幼稚。“分手也要能做朋友”这在短期内来看也是扯淡，不过从长期看，只要都能回避敏感话题，我倒是感觉有可能。</p>
+<pre><code>这段时间里，我想清楚了几件事
+
+<span class="bullet">1. </span>除了爱情，生活里还有很多别的东西
+<span class="bullet">2. </span>不谈异地恋
+<span class="bullet">3. </span>不要让她哭
+<span class="bullet">4. </span>不要依赖一个人
+<span class="bullet">5. </span>饮食要健康，多吃蔬菜少吃肉，戒酒
+
+也有了一些好的变化
+
+<span class="bullet">- </span>之前一直是不愿跟家人说话的，现在自己也变得愿意跟他们谈谈了。
+<span class="bullet">- </span>之前爱喝饮料，现在只喝白水。
+<span class="bullet">- </span>之前无肉不欢，不吃蔬菜，现在顿顿蔬菜。
+<span class="bullet">- </span>之前爱吃零食，现在不吃了。
+</code></pre><p>我想分手后，我有充足的时间来反思，来学习，来改进之前那些忽略了的。</p>
+<p>成长应该是现在自己变得比以前的自己的更好的过程。</p>
+<blockquote>
+<p>套用一句话“人有种属性，习惯于拥有，不习惯于失去。”</p>
+</blockquote>
+<p>这次是从失去中成长，学会去变得比原来更好。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>从二月里到现在，这两个月来生活里发生的变化真是天翻地覆，起因是某人彻底的离我而去，而且这次是真是没得回头了。</p>
+<p>谈了5年多的人，被一个追了两周的人抢走，也是十分讽刺。</p>
+<p>我的反应也从最初的暴怒，到现在的平静，虽然花的时间有点久，代价有点大，到底是走出]]>
+    </summary>
+    
+      <category term="杂谈" scheme="http://halfcrazy.me/tags/%E6%9D%82%E8%B0%88/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[python中的staticmethod与classmethod]]></title>
