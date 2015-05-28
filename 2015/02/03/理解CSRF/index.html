@@ -7,28 +7,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="原文出处Understanding CSRF
 
-对于Express团队的csrf模块有一些关注，尤其是围绕着如何安全的生成token。这些关注是莫须有的，因为他们不了解CSRF token是如何工作的。下面快速过一遍！
+对于Express团队的csrf模块和csurf模块的加密函数的用法我们经常有一些在意。这些在意是莫须有的，因为他们不了解CSRF token是如何工作的。下面快速过一遍！
 读过后还有疑问？希望告诉我们错误？请开一个issue！
-一个CSRF攻击是如何工作的？在他们的钓鱼站点，攻击者可以针对你的网站创建一个请求通过创建一个AJAX按钮或者表单：
-123">
+一个CSRF攻击是如何工作的？在他们的钓鱼站点，攻击者可以通过创建一个AJAX按钮或者表单来针对你的网站创建一个请求：
+1">
 <meta property="og:type" content="article">
 <meta property="og:title" content="理解CSRF(跨站请求伪造)">
 <meta property="og:url" content="http://halfcrazy.me/2015/02/03/理解CSRF/index.html">
 <meta property="og:site_name" content="halfcrazy在疯言疯语">
 <meta property="og:description" content="原文出处Understanding CSRF
 
-对于Express团队的csrf模块有一些关注，尤其是围绕着如何安全的生成token。这些关注是莫须有的，因为他们不了解CSRF token是如何工作的。下面快速过一遍！
+对于Express团队的csrf模块和csurf模块的加密函数的用法我们经常有一些在意。这些在意是莫须有的，因为他们不了解CSRF token是如何工作的。下面快速过一遍！
 读过后还有疑问？希望告诉我们错误？请开一个issue！
-一个CSRF攻击是如何工作的？在他们的钓鱼站点，攻击者可以针对你的网站创建一个请求通过创建一个AJAX按钮或者表单：
-123">
+一个CSRF攻击是如何工作的？在他们的钓鱼站点，攻击者可以通过创建一个AJAX按钮或者表单来针对你的网站创建一个请求：
+1">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="理解CSRF(跨站请求伪造)">
 <meta name="twitter:description" content="原文出处Understanding CSRF
 
-对于Express团队的csrf模块有一些关注，尤其是围绕着如何安全的生成token。这些关注是莫须有的，因为他们不了解CSRF token是如何工作的。下面快速过一遍！
+对于Express团队的csrf模块和csurf模块的加密函数的用法我们经常有一些在意。这些在意是莫须有的，因为他们不了解CSRF token是如何工作的。下面快速过一遍！
 读过后还有疑问？希望告诉我们错误？请开一个issue！
-一个CSRF攻击是如何工作的？在他们的钓鱼站点，攻击者可以针对你的网站创建一个请求通过创建一个AJAX按钮或者表单：
-123">
+一个CSRF攻击是如何工作的？在他们的钓鱼站点，攻击者可以通过创建一个AJAX按钮或者表单来针对你的网站创建一个请求：
+1">
   
     <link rel="alternative" href="/atom.xml" title="halfcrazy在疯言疯语" type="application/atom+xml">
   
@@ -119,26 +119,30 @@ ga('send', 'pageview');
         <blockquote>
 <p>原文出处<a href="https://github.com/pillarjs/understanding-csrf" target="_blank" rel="external">Understanding CSRF</a></p>
 </blockquote>
-<p>对于Express团队的<a href="https://github.com/pillarjs/csurf" target="_blank" rel="external">csrf</a>模块有一些关注，尤其是围绕着如何安全的生成token。<br>这些关注是莫须有的，因为他们不了解CSRF token是如何工作的。<br>下面快速过一遍！</p>
+<p>对于Express团队的<a href="https://github.com/pillarjs/csrf" target="_blank" rel="external">csrf</a>模块和<a href="https://github.com/pillarjs/csurf" target="_blank" rel="external">csurf</a>模块的加密函数的用法我们经常有一些在意。<br>这些在意是莫须有的，因为他们不了解CSRF token是如何工作的。<br>下面快速过一遍！</p>
 <p>读过后还有疑问？希望告诉我们错误？请开一个issue！</p>
-<h2 id="一个CSRF攻击是如何工作的？">一个CSRF攻击是如何工作的？</h2><p>在他们的钓鱼站点，攻击者可以针对你的网站创建一个请求通过创建一个AJAX按钮或者表单：</p>
+<h2 id="一个CSRF攻击是如何工作的？">一个CSRF攻击是如何工作的？</h2><p>在他们的钓鱼站点，攻击者可以通过创建一个AJAX按钮或者表单来针对你的网站创建一个请求：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="title">form</span> <span class="attribute">action</span>=<span class="value">"https://my.site.com/me/something-destructive"</span> <span class="attribute">method</span>=<span class="value">"POST"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="title">button</span> <span class="attribute">type</span>=<span class="value">"submit"</span>&gt;</span>Click here for free money!<span class="tag">&lt;/<span class="title">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="title">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>这是很危险的，因为攻击者可以使用其他http方法例如 <code>delete</code> 来获取结果。<br>这在用户的session中有很多关于你的网站的详细信息时是相当危险的。如果一个不懂技术的用户遇到了，他们就有可能会输入信用卡号或者个人安全信息。</p>
-<h2 id="如果减轻CSRF攻击？">如果减轻CSRF攻击？</h2><h3 id="禁用CORS">禁用CORS</h3><p>第一种减轻CSRF攻击的方法是禁用cross-origin requests(跨域请求)。<br>不要允许跨域请求!<br>如果你希望允许跨域请求，那么请只允许 <code>OPTIONS, HEAD, GET</code> 方法，并且不要支持sessions或者cookies!<br>他们是攻击者的主要目标。</p>
-<p>一种推荐的做法是总是删除来自跨域请求的cookies在你处理来自这些请求的任何业务逻辑之前。<br>另外一种是检验header中的带的 <code>referrer</code> 。</p>
-<h3 id="不要兼容旧浏览器">不要兼容旧浏览器</h3><p>但是请记住，CSRF在CORS实现之前就有。<br>并且对于不支持CORS的浏览器来说，这是一个大问题。<br>就我所知道的，这意味着IE10以前的所有浏览器。</p>
-<p>因此，你可以不支持那些旧的浏览器！<br>这意味着查看那些特别的 <code>user-agent</code> 。<br>如果你只是不允许那些使用旧浏览器的用户登录或者存储任何个人信息，那也是可以的！</p>
+<p>这是很危险的，因为攻击者可以使用其他http方法例如 <code>delete</code> 来获取结果。<br>这在用户的session中有很多关于你的网站的详细信息时是相当危险的。<br>如果一个不懂技术的用户遇到了，他们就有可能会输入信用卡号或者个人安全信息。</p>
+<h2 id="如果减轻CSRF攻击？">如果减轻CSRF攻击？</h2><h3 id="只使用JSON_api">只使用JSON api</h3><p>使用JavaScript发起AJAX请求是限制跨域的。<br>不能通过一个简单的<code>&lt;form&gt;</code>来发送<code>JSON</code>，<br>所以，通过只接收JSON，你可以降低发生上面那种情况的可能性。</p>
+<h3 id="禁用CORS">禁用CORS</h3><p>第一种减轻CSRF攻击的方法是禁用cross-origin requests(跨域请求)。<br>如果你希望允许跨域请求，那么请只允许 <code>OPTIONS, HEAD, GET</code> 方法，因为他们没有副作用。</p>
+<p>不幸的是，这不会阻止上面的请求由于它没有使用JavaScript(因此CORS不适用)。</p>
+<h3 id="检验referrer头部">检验referrer头部</h3><p>不幸的是，检验referrer头部很麻烦，<br>但是你可以阻止那些referrer头部不是来自你的页面的请求。<br>这实在不值得麻烦。</p>
+<p>举个例子，你不能加载session如果这个请求的referrer头部不是你的服务器。</p>
+<h3 id="GET总是幂等的">GET总是幂等的</h3><p>确保你的<code>GET</code>请求不会修改你数据库中的相关数据。<br>这是一个初学者常犯的错误，使得你的应用不仅是易于遭受CSRF攻击。</p>
+<h3 id="避免使用POST">避免使用POST</h3><p>因为<code>&lt;form&gt;</code>只能用<code>GET</code>或是<code>POST</code>,<br>而不能使用别的方法，例如<code>PUT</code>, <code>PATCH</code>, <code>DELETE</code>，<br>攻击者很难有方法攻击你的网站。</p>
+<h3 id="不要复写方法">不要复写方法</h3><p>许多应用程序使用<a href="https://github.com/expressjs/method-override" target="_blank" rel="external">复写方法</a>来在一个常规表单中使用<code>PUT</code>, <code>PATCH</code>, 和<code>DELETE</code>请求。<br>这会使得原先不易受攻击的方法变得易受攻击。</p>
+<h3 id="不要兼容旧浏览器">不要兼容旧浏览器</h3><p>旧的浏览器不支持CORS或是其他安全政策。<br>通过不兼容旧浏览器<br>(那些不懂技术的人用的越多，我们越容易被攻击),<br>你可以最小化受到攻击的可能性。</p>
 <h3 id="CSRF_Tokens">CSRF Tokens</h3><p>最终的解决办法是使用CSRF tokens。<br>CSRF tokens是如何工作的呢？</p>
 <ol>
 <li>服务器发送给客户端一个token。</li>
 <li>客户端提交的表单中带着这个token。</li>
 <li>如果这个token不合法，那么服务器拒绝这个请求。</li>
 </ol>
-<p>因此，攻击者需要通过谋者办法获得一个合法的token来构造一个AJAX请求。<br>如果你允许了CORS，那么如果攻击者做起来就很简单，如果你暴露了token给客户端通过某种方式(显然你会把token发给客户端)。</p>
-<p><strong>禁用 CORS!!!</strong><br>但是对于旧的浏览器，这相当简单，只要攻击者知道可以从哪里获取一个CSRF token。</p>
-<p>这个token需要是不可猜测的，是它不会被攻击者尝试几次就猜出来。</p>
-<p>最后一件事是不要创建一个类似 <code>/csrf</code> 之类的路由来获取token，那么攻击者就不会很容易获取一个CSRF token。</p>
-<h2 id="BREACH攻击">BREACH攻击</h2><p>这也就是salt(加盐)出现的原因。<br>Breach攻击相当简单：如果服务器通过HTTPS+gzip多次发送相同或者相似的响应，攻击者就可以猜测响应的内容。解决办法？让每一个响应都有那么一点不同。<br>于是，CSRF tokens依据每一个不同的请求还有不同的时间来生成。<br>但是服务器需要知道客户端请求中带的token是否是合法的。<br>因此：</p>
+<p>攻击者需要通过某种手段获取你站点的CSRF token，<br>他们只能使用JavaScript来做。<br>所以，如果你的站点不支持CORS，<br>那么他们就没有办法来获取CSRF token，<br>降低了威胁。</p>
+<p><strong>确保CSRF token不能通过AJAX访问到!</strong><br>不要创建一个<code>/CSRF</code>路由来获取一个token，<br>尤其不要在这个路由上支持CORS!</p>
+<p>token需要是不容易被猜到的，<br>让它很难被攻击者尝试几次得到。<br>它不需要是密码安全的。<br>攻击来自从一个未知的用户的一次或者两次的点击，<br>而不是来自一台服务器的暴力攻击。</p>
+<h2 id="BREACH攻击">BREACH攻击</h2><p>这也就是salt(加盐)出现的原因。<br>Breach攻击相当简单：如果服务器通过<code>HTTPS+gzip</code>多次发送相同或者相似的响应，攻击者就可以猜测响应的内容(使得HTTPS完全无用)。<br>解决办法？让每一个响应都有那么一点不同。<br>于是，CSRF tokens依据每一个不同的请求还有不同的时间来生成。<br>但是服务器需要知道客户端请求中带的token是否是合法的。<br>因此：</p>
 <ol>
 <li>一般认为安全加密的CSRF tokens是防护CSRF的关键</li>
 <li>CSRF tokens现在通常是一个秘钥或者salt的hash</li>
@@ -149,21 +153,18 @@ ga('send', 'pageview');
 <li><a href="http://en.wikipedia.org/wiki/CRIME" target="_blank" rel="external">CRIME</a></li>
 <li><a href="https://community.qualys.com/blogs/securitylabs/2013/08/07/defending-against-the-breach-attack" target="_blank" rel="external">Defending against the BREACH Attack</a></li>
 </ul>
+<p>注意，CSRF没有_解决_BREACH攻击，<br>但是这个模块通过随机化请求来为你减轻BREACH攻击。</p>
 <h2 id="salt不需要加密">salt不需要加密</h2><p><strong>因为客户端知道salt!!!</strong><br>服务器会发送 <code>&lt;salt&gt;;&lt;token&gt;</code> ，然后客户端会通过请求返回相同的值给服务器。服务器然后会检验 <code>&lt;secret&gt;+&lt;salt&gt;=&lt;token&gt;</code> 。<br>salt必须跟token一起被发送给服务器，否则服务器不能验证这个token。<br>这是最简单的加密方式。<br>还有很多方法，不过他们更加复杂，犯不着那么麻烦。</p>
-<h2 id="创建tokens必须要快">创建tokens必须要快</h2><p><strong>因为每当进来一个请求他们就会被创建!</strong><br>一些人希望salt通过 <code>crypto.randomBytes()</code> 来创建。<br>这个方法的问题在于，服务器会消耗很多资源，那么，响应速度就会不必要的变慢。<br>因此，一些人建议用 <code>crypto.pseudRandomBytes()</code> ,但是这也同样会导致不必要的变慢。</p>
-<blockquote>
-<p>注意: 在最新版本的io.js中不再有这个问题</p>
-</blockquote>
-<p>因此，类似 <code>Math.random().toString(36).slice(2)</code> 这种简单操作是相当高效的。</p>
+<h2 id="创建tokens必须要快">创建tokens必须要快</h2><p><strong>因为每当进来一个请求他们就会被创建!</strong><br>像<code>Math.random().toString(36).slice(2)</code>这么做也是性能足够好的!<br>你不需要OpenSSL来为每一个请求创建一个密码安全的token。</p>
 <h2 id="秘钥不需要是加密的，但需要是安全的">秘钥不需要是加密的，但需要是安全的</h2><p>如果你正在使用一个数据库后端来存储session，客户端是不会知道秘钥的，因为它被存储在数据库中。<br>如果你正在使用cookie来存储session，那么秘钥就会被存储在cookie中发送给客户端。<br>因此， <strong>确保cookie sessions 使用 <code>httpOnly</code> 那样客户端就不能通过客户端JavaScript来读取到秘钥!</strong></p>
-<p>即使攻击者可以通过某种手段获取到<code>secret</code>，他也必须要通过CORS请求。</p>
-<h2 id="CSRF攻击只和浏览器有关">CSRF攻击只和浏览器有关</h2><p>如果你正在使用浏览器的开发工具或者其他一般人不会使用到的工具，那你的担心是没有道理的。<br>使用不同的工具有很多种攻击网站的办法，但是CSRF的主要关注点是阻止那些对于不懂技术又使用旧浏览器的使用者的攻击。对于CSRF tokens的一个主要假设是，攻击者不会接触到的受害者的电脑，否则他有比CSRF更好的办法去攻击受害者的电脑。</p>
-<h2 id="CSRF_tokens最终会变得不是那么必要">CSRF tokens最终会变得不是那么必要</h2><p>随着现代浏览器支持CORS以及安全策略，CSRF tokens最终会消失。<br>不用太担心CSRF tokens。<br>对于现在来说，禁止IE9及其以下的浏览器存储你网站的机密信息。<br>但是为了安全起见，你还是应该尽量允许他们尤其是当难以实现的时候。</p>
+<h2 id="当你不正确的使用CSRF_token">当你不正确的使用CSRF token</h2><h3 id="把它们加到JSON_AJAX调用中">把它们加到JSON AJAX调用中</h3><p>正如上面提到的，如果你不支持CORS并且你的API是传输的严格的JSON，<br>绝没可能在你的AJAX 调用中加入CSRF token。</p>
+<h3 id="通过AJAX暴露你的CSRF_token">通过AJAX暴露你的CSRF token</h3><p>不要创建一个<code>GET /csrf</code>路由<br>并且尤其不要在这个路由上支持CORS。<br>不要发送CSRF token在API响应的body中。</p>
+<h2 id="结论">结论</h2><p>因为web正在向JSON API转移，并且浏览器变得更安全，有更多的安全策略，<br>CSRF正在变得不那么值得关注。<br>阻止旧的浏览器访问你的站点，并尽可能的将你的API变成JSON API，<br>然后你将不再需要CSRF token。<br>但是为了安全起见，你还是应该尽量允许他们尤其是当难以实现的时候。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://halfcrazy.me/2015/02/03/理解CSRF/" data-id="ci84lte4y0001hwyg16ds7f4j" class="article-share-link">Share</a>
+      <a data-url="http://halfcrazy.me/2015/02/03/理解CSRF/" data-id="cia8domqk0001egyg2puhs1z6" class="article-share-link">Share</a>
       
         <a href="http://halfcrazy.me/2015/02/03/理解CSRF/#disqus_thread" class="article-comment-link">Comments</a>
       
